@@ -137,6 +137,8 @@ contract Token is IToken, AgentRoleUpgradeable, TokenStorage {
     /**
      *  @dev See {IERC20-approve}.
      */
+
+    // Note: how could you approve token only to be spent on a compliant DEX?
     function approve(address _spender, uint256 _amount) external virtual override returns (bool) {
         _approve(msg.sender, _spender, _amount);
         return true;
@@ -220,7 +222,10 @@ contract Token is IToken, AgentRoleUpgradeable, TokenStorage {
      *  @param _amount The number of tokens to transfer
      *  @return `true` if successful and revert if unsuccessful
      */
+
+    // Note: interesting here that it requires both for the identity to be verified and the compliance check to pass
     function transferFrom(address _from, address _to, uint256 _amount) external override whenNotPaused returns (bool) {
+        // Question: how does a wallet get frozen?
         require(!_frozen[_to] && !_frozen[_from], 'wallet is frozen');
         require(_amount <= balanceOf(_from) - (_frozenTokens[_from]), 'Insufficient Balance');
         if (_tokenIdentityRegistry.isVerified(_to) && _tokenCompliance.canTransfer(_from, _to, _amount)) {
