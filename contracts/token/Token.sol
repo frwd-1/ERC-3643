@@ -98,6 +98,7 @@ contract Token is IToken, AgentRoleUpgradeable, TokenStorage {
      */
 
     // Note: there is an "identityRegistry"
+    // question, how would this integrate with v4 hooks?
     function init(
         address _identityRegistry,
         address _compliance,
